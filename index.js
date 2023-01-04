@@ -5,7 +5,7 @@ const number = document.querySelectorAll('.numDisplay')
 const clear = document.querySelector('[data-clear]')
 const equal = document.querySelector('[data-equal]')
 
-display.textContent = ""
+display.innerText = ""
 let prevNum;
 let operator;
 let previous;
@@ -16,19 +16,22 @@ let currNum;
 function compute(){
 if(operator == "+"){
   let output = Number(prevNum) + Number(currNum)
-  display.textContent = `${output}`;
+  display.innerText = `${output}`;
+  prevNum = `${output}`;
 }
 else if(operator == "-"){
     let output = Number(prevNum) - Number(currNum)
-    display.textContent = `${output}`;
+    display.innerText = `${output}`;
+    prevNum = `${output}`;
   }
  else if(operator == "*"){
     let output = Number(prevNum) * Number(currNum)
-    display.textContent = `${output}`;
+    display.innerText = `${output}`;
+    prevNum = `${output}`;
   }
-  if(operator == "/"){
+  else if(operator == "/"){
     let output = Number(prevNum) / Number(currNum)
-    display.textContent = `${output}`;
+    display.innerText = `${output}`;
     prevNum = `${output}`;
   }
 }
@@ -47,22 +50,32 @@ number.forEach((e)=>{
             display.textContent += value;
         }
         else if(value == "+" && display.textContent == "" || value == "-" && display.textContent == "" || value == "*" && display.textContent == "" || value == "/" && display.textContent == "" || value == "." && display.textContent == ""){
-            display.textContent = "";
+            value = "";
         }
         else{
             if(value == "+" && operator == undefined || value == "-" && operator == undefined || value == "*" && operator == undefined || value == "/" && operator == undefined){
-                prevNum = display.innerText
+                prevNum = display.innerText;
                 operator = value;
                 previous = prevNum + operator;
                 display.textContent += value;
+                console.log(prevNum,operator)
             }
-            else if(value = "."){
+            else if(value == "+" && operator != undefined || value == "-" && operator != undefined || value == "*" && operator != undefined || value == "/" && operator != undefined){
+                console.log(prevNum,currNum,operator)
+                currNum = display.innerText.replace(previous,"")
+                compute();
+                display.innerText = "";
+                operator = value;
+                currNum = undefined;
+                previous = prevNum + operator;
+                display.innerText += prevNum + operator;
+            }
+            else if(value == "."){
                 display.textContent += value;
             }
             else{
-                value = ""
+                return
             }
-
         }
     })
 })
@@ -74,21 +87,21 @@ clear.addEventListener('mousedown',()=>{
 })
 
 clear.addEventListener('mouseup',()=>{
-    clear.style.backgroundColor = 'white'
+    clear.style.backgroundColor = 'rgb(240,240,240)'
 })
 
 allClear.addEventListener('mousedown',()=>{
     allClear.style.backgroundColor = 'red'
     display.innerHTML = "";
-    prevNum = "";
+    prevNum = undefined;
     operator = undefined;
-    previous = "";
-    currNum = "";
+    previous = undefined;
+    currNum = undefined;
 
 })
 
 allClear.addEventListener('mouseup',()=>{
-    allClear.style.backgroundColor = 'white'
+    allClear.style.backgroundColor = 'rgb(240,240,240)'
 })
 equal.addEventListener('mousedown',()=>{
     equal.style.backgroundColor = 'green'
@@ -98,5 +111,5 @@ equal.addEventListener('mousedown',()=>{
 })
 
 equal.addEventListener('mouseup',()=>{
-    equal.style.backgroundColor = 'white'
+    equal.style.backgroundColor = 'rgb(240,240,240)'
 })
